@@ -14,11 +14,11 @@ public class AdminService {
         this.repositorio = repositorio;
     }
 
-    /*public Admin registrarAdmin(Admin admin, String encodedPassword){
+    public Admin registrarAdmin(Admin admin, String encodedPassword){
         admin.setPassword(encodedPassword);
         repositorio.save(admin);
         return admin;
-    }*/
+    }
 
     public Admin findByUsuario(String usuario){
         return repositorio.findByAdministrador(usuario);

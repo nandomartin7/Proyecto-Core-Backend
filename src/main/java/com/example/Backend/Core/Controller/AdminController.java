@@ -32,10 +32,10 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales Invalidas");
     }
 
-    /*@PostMapping("/registro")
+    @PostMapping("/registro")
     public ResponseEntity<String> registrar(@RequestBody Admin admin){
         String encodedPassword = passwordEncoder.encode(admin.getPassword());
         adminService.registrarAdmin(admin, encodedPassword);
         return ResponseEntity.ok("Registro Exitoso");
-    }*/
+    }
 }
