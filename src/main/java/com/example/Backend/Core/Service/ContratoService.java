@@ -129,7 +129,7 @@ public class ContratoService {
             existe.setFechaRenovacion(contratoActualizar.getFechaRenovacion());
             existe.setValoresAgregados(contratoActualizar.getValoresAgregados());
             existe.setMotivoAgregados(contratoActualizar.getMotivoAgregados());
-            existe.setValorsubtotal(contratoActualizar.getValorsubtotal());
+            existe.setValorsubtotal(contratoActualizar.getPlanSeguro().getValorPlan());
             existe.setValortotal(existe.getValorsubtotal()+(existe.getValorsubtotal()*existe.getValoresAgregados()));
             return contratoRepository.save(existe);
         }else {
@@ -173,5 +173,44 @@ public class ContratoService {
 
         calendar.add(Calendar.HOUR_OF_DAY,5);
         return calendar.getTime();
+    }
+
+    public List<Contrato> findByCliente (String idCliente){
+        List<Contrato> contratos = findAll();
+        List<Contrato> contratosFiltados = new ArrayList<>();
+
+        for (Contrato contrato: contratos){
+            if (contrato.getCliente().getIdCliente().equals(idCliente)){
+                contratosFiltados.add(contrato);
+            }
+        }
+        return contratosFiltados;
+    }
+
+    public Contrato findByAutomovil (String idAutomovil){
+        List<Contrato> contratos = findAll();
+        Contrato contratoFiltrado = null;
+
+        for (Contrato contrato: contratos){
+            if (contrato.getAutomovil().getIdAutomovil().equals(idAutomovil)){
+                contratoFiltrado = contrato;
+            }
+        }
+        return contratoFiltrado;
+    }
+
+    public Contrato ajusteContrato(Long idContrato, String motivoAgregados, double penalidad) throws Exception {
+        Contrato contrato = findByIdContrato(idContrato);
+        if (contrato == null) {
+            throw new Exception("El contrato con ID " + idContrato + " no existe.");
+        }
+
+        contrato.setValoresAgregados(penalidad);
+        contrato.setMotivoAgregados(motivoAgregados);
+        double nuevoTotal = contrato.getPlanSeguro().getValorPlan() + (contrato.getPlanSeguro().getValorPlan() * penalidad / 100);
+        contrato.setValortotal(nuevoTotal);
+
+        // Guardar el contrato actualizado
+        return contratoRepository.save(contrato);
     }
 }

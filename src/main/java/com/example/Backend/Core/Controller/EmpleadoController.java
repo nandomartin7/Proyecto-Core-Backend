@@ -1,5 +1,6 @@
 package com.example.Backend.Core.Controller;
 
+import com.example.Backend.Core.Models.Cliente;
 import com.example.Backend.Core.Models.Empleado;
 import com.example.Backend.Core.Service.EmpleadoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,4 +56,12 @@ public class EmpleadoController {
         return empleadoService.deleteEmpleado(idEmpleado) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Empleado empleado){
+        Empleado existe = empleadoService.findByIdEmpleado(empleado.getIdEmpleado());
+        if (existe != null && passwordEncoder.matches(empleado.getPassword(), existe.getPassword())){
+            return ResponseEntity.ok("Inicio de sesion exitoso");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales Invalidas");
+    }
 }

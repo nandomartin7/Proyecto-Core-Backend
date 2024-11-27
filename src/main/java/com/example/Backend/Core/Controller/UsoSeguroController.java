@@ -4,6 +4,7 @@ import com.example.Backend.Core.Models.Automovil;
 import com.example.Backend.Core.Models.UsoSeguro;
 import com.example.Backend.Core.Service.UsoSeguroService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +56,8 @@ public class UsoSeguroController {
     }
 
     @GetMapping("/filtrar/fecha")
-    public List<UsoSeguro> filtrarByFecha(@RequestParam Date fechaInicio, @RequestParam Date fechaFin){
+    public List<UsoSeguro> filtrarByFecha(@RequestParam("fechaInicio") @DateTimeFormat(pattern = "yyyy-MM-dd")  Date fechaInicio,
+                                          @RequestParam("fechaFin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin){
         return usoSeguroService.findByFechas(fechaInicio,fechaFin);
     }
 

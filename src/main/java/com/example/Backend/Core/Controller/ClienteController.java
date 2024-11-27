@@ -1,5 +1,6 @@
 package com.example.Backend.Core.Controller;
 
+import com.example.Backend.Core.Models.Admin;
 import com.example.Backend.Core.Models.Cliente;
 import com.example.Backend.Core.Service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +54,22 @@ public class ClienteController {
     @DeleteMapping("/{idCliente}")
     public ResponseEntity<Void> deleteCliente (@PathVariable String idCliente) throws Exception{
         return clienteService.deleteCliente(idCliente) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Cliente cliente){
+        Cliente existe = clienteService.findByIdCliente(cliente.getIdCliente());
+        Cliente referencia = new Cliente();
+        if (existe != null && passwordEncoder.matches(cliente.getPassword(), existe.getPassword())){
+            referencia.setIdCliente(existe.getIdCliente());
+            referencia.setNombre(existe.getNombre());
+            referencia.setApellido(existe.getApellido());
+            referencia.setCorreo(existe.getCorreo());
+            referencia.setDireccion(existe.getDireccion());
+            referencia.setTelefono(existe.getTelefono());
+
+            return ResponseEntity.ok(referencia);
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales Invalidas");
     }
 }
